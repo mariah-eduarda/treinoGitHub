@@ -1,142 +1,56 @@
-//Criando o arquivo de testes
-//ConteÃºdo do arquivo:
 
-// Sistema de testes automatizados
+// AplicaÃ§Ã£o simples para demonstrar CI/CD
 
-const { saudacao, calcular } = require('./app.js');
+function saudacao(nome) {
 
-// Contador de testes
+    if (!nome || nome.trim() === '') {
 
-let testesExecutados = 0;
+        throw new Error('Nome nÃ£o pode estar vazio');
 
-let testesPassaram = 0;
+    }
 
-let testesFalharam = 0;
+    return `OlÃ¡, ${nome}! Bem-vindo ao nosso sistema CI/CD!`;
 
-// FunÃ§Ã£o auxiliar para executar testes
+}
 
-function executarTeste(nome, funcaoTeste) {
+function calcular(a, b, operacao) {
 
-    testesExecutados++;
+    switch(operacao) {
 
-    try {
+        case 'soma':
 
-        funcaoTeste();
+            return a + b;
 
-        console.log(`PASSOU: ${nome}`);
+        case 'subtracao':
 
-        testesPassaram++;
+            return a - b;
 
-    } catch (error) {
+        case 'multiplicacao':
 
-        console.log(`FALHOU: ${nome}`);
+            return a * b;
 
-        console.log(`   Erro: ${error.message}`);
+        case 'divisao':
 
-        testesFalharam++;
+            if (b === 0) throw new Error('DivisÃ£o por zero nÃ£o Ã© permitida');
+
+            return a / b;
+
+        default:
+
+            throw new Error('OperaÃ§Ã£o nÃ£o suportada');
 
     }
 
 }
 
-// FunÃ§Ã£o auxiliar para verificar igualdade
+// Exportar funÃ§Ãµes para testes (em ambiente Node.js)
 
-function assertEqual(atual, esperado, mensagem = '') {
+if (typeof module !== 'undefined' && module.exports) {
 
-    if (atual !== esperado) {
-
-        throw new Error(`${mensagem} - Esperado: ${esperado}, Atual: ${atual}`);
-
-    }
+    module.exports = { saudacao, calcular };
 
 }
 
-// FunÃ§Ã£o auxiliar para verificar se uma funÃ§Ã£o lanÃ§a erro
-
-function assertThrows(funcao, mensagemEsperada = '') {
-
-    try {
-
-        funcao();
-
-        throw new Error('Esperava que a funÃ§Ã£o lanÃ§asse um erro, mas nÃ£o lanÃ§ou');
-
-    } catch (error) {
-
-        if (mensagemEsperada && !error.message.includes(mensagemEsperada)) {
-
-            throw new Error(`Erro lanÃ§ado, mas mensagem incorreta. Esperado: "${mensagemEsperada}", Atual: "${error.message}"`);
-
-        }
-
-    }
-
-}
-
-console.log('Iniciando bateria de testes automatizados...\n');
-
-// === TESTES DA FUNÃ‡ÃƒO SAUDACAO ===
-
-console.log('Testando funÃ§Ã£o saudacao():');
-
-executarTeste('SaudaÃ§Ã£o com nome vÃ¡lido', () => {
-
-    const resultado = saudacao('JoÃ£o');
-
-    assertEqual(resultado, 'OlÃ¡, JoÃ£o! Bem-vindo ao nosso sistema CI/CD!');
-
-});
-
-executarTeste('SaudaÃ§Ã£o com nome vazio deve falhar', () => {
-
-    assertThrows(() => saudacao(''), 'Nome nÃ£o pode estar vazio');
-
-});
-
-executarTeste('SaudaÃ§Ã£o com null deve falhar', () => {
-
-    assertThrows(() => saudacao(null), 'Nome nÃ£o pode estar vazio');
-
-});
-
-// === TESTES DA FUNÃ‡ÃƒO CALCULAR ===
-
-console.log('\n Testando funÃ§Ã£o calcular():');
-
-executarTeste('Soma: 2 + 3 = 5', () => {
-
-    assertEqual(calcular(2, 3, 'soma'), 5);
-
-});
-
-executarTeste('DivisÃ£o por zero deve falhar', () => {
-
-    assertThrows(() => calcular(10, 0, 'divisao'), 'DivisÃ£o por zero nÃ£o Ã© permitida');
-
-});
-
-// === RELATÃ“RIO FINAL ===
-
-console.log('\n RELATÃ“RIO FINAL DOS TESTES:');
-
-console.log(` Total de testes: ${testesExecutados}`);
-
-console.log(` Passaram: ${testesPassaram}`);
-
-console.log(`Falharam: ${testesFalharam}`);
-
-if (testesFalharam > 0) {
-
-    console.log('\n ATENÃ‡ÃƒO: Alguns testes falharam! O cÃ³digo precisa ser corrigido.');
-
-    process.exit(1); // Sair com cÃ³digo de erro
-
-} else {
-
-    console.log('\n SUCESSO: Todos os testes passaram! O cÃ³digo estÃ¡ funcionando corretamente.');
-
-    process.exit(0); // Sair com cÃ³digo de sucesso
-
-}
+console.log('AplicaÃ§Ã£o carregada com sucesso!');
 
 
